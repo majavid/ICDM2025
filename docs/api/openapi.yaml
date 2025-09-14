@@ -1,0 +1,46 @@
+openapi: 3.0.0
+info:
+  title: Example Rest API
+  version: 1.0.0
+  description: |
+    This is the template for a Rest API
+paths:
+  /example:
+    get:
+      summary: Get example
+      description: Get example
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  example:
+                    type: string
+                    example: example get response
+    post:
+      summary: Post example
+      description: Post example
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                example:
+                  type: string
+                  example: example request body
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  example:
+                    type: string
+                    example: example response

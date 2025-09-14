@@ -1,0 +1,3 @@
+# TODO: Add any packages required to build the documentation for your respository (including autodoc import resolution).
+Sphinx==7.3.7
+sphinx-rtd-theme==2.0.0
