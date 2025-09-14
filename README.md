@@ -3,8 +3,7 @@ Template repository for ASU CS Research organization. Specifies the folder hiera
 by our CI/CD pipelines. 
 
 ## Description:
-This is a template repository for the ASU CS Research organization. It is meant to be used as a starting point for new
-repositories. It enforces a standardized environment for our auto-documentation system and CI/CD pipelines. 
+Code and experiments for “EM-Based Transfer Learning for Gaussian Causal Models Under Covariate and Target Shift”, accepted as a regular paper at IEEE ICDM 2025. 
 
 ## Usage:
 Follow the steps below to use this template:
