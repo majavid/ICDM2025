@@ -119,11 +119,21 @@ def print_parent_lists(nodes: list[str], amat_np: np.ndarray) -> None:
 # --------------------------------------------------------------------------- #
 #  Regression helper with optional fixed coefficients                         #
 # --------------------------------------------------------------------------- #
-def lmfit(s: np.ndarray, y: int, x: list[int], z: list[int] | None = None) -> np.ndarray:
-    """
-    Regression coefficients of Y on X with optional coefficients on Z fixed to 1.
-    Returns a length-p vector:
-        out[x] = β̂,   out[z] = 1,   out[y] = residual variance σ̂²_y.
+def lmfit(s: np.ndarray, y: int, x: list[int]) -> np.ndarray:
+    """Ordinary least squares for a DAG node.
+
+    Fits a regression of node ``y`` on its parent indices ``x`` using the
+    covariance matrix ``s`` (shape p×p).
+
+    Args:
+        s: Covariance matrix (p × p).
+        y: Index of the child node.
+        x: List of parent indices for node ``y``.
+
+    Returns:
+        np.ndarray: Length-``p`` vector ``m`` where:
+            - ``m[parent] = beta`` for each parent in ``x``
+            - ``m[y]`` is the residual variance
     """
     z = z or []
     p = s.shape[0]
@@ -333,139 +343,3 @@ def fitDagLatent(amat: pd.DataFrame,
         df=df,
         iterations=it,
     )
-
-
-# --------------------------------------------------------------------------- #
-#  Example                                                                    #
-# --------------------------------------------------------------------------- #
-if __name__ == "__main__":
-    import matplotlib.pyplot as plt
-    from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-
-    # 1) Load data
-    source_df      = pd.read_csv("source_1.csv")          # complete data (for init Sigma)
-    target_df      = pd.read_csv("tgt_target_missing_1.csv")   # T missing or dropped
-    target_true_df = pd.read_csv("tgt_target_true_1.csv")          # T complete (for eval)
-
-    # 2) Load adjacency matrix (amat[j,i] == 1 means j → i)
-    amat_df = pd.read_csv("adjacency_matrix.csv", index_col=0)
-    amat_df.index  = amat_df.index.astype(str).str.strip()
-    amat_df.columns = amat_df.columns.astype(str).str.strip()
-    nodes   = list(amat_df.index)
-    amat_df = amat_df.loc[nodes, nodes]  # ensure consistent ordering
-
-    # (Optional) print parents once here too:
-    print("\nParents from CSV order (sanity check):")
-    print_parent_lists(nodes, amat_df.values)
-
-    # 3) Observed covariance matrix (exclude latent 'T')
-    obs_vars = [v for v in nodes if v != 'T']
-    if 'T' in target_df.columns:
-        syy = target_df[obs_vars].cov()
-    else:
-        syy = target_df.cov()
-
-    # 4) Initial Sigma: from source fit (could alternatively use random_corr)
-    syy_source = source_df.cov()
-    fit_source = fitdag(amat_df.values, syy_source.values, n=source_df.shape[0])
-    sigma0 = fit_source["Shat"]
-    # Alternative: sigma0 = random_corr(len(nodes))
-
-    # 5) EM fit with 'T' as latent; also print parent lists once (EM order)
-    fit = fitDagLatent(
-        amat=amat_df,
-        syy=syy,
-        sigma_old=sigma0,
-        n=target_df.shape[0],
-        latent='T',
-        norm=2,
-        seed=145,
-        verbose=True,            # EM progress every 50 its
-        verbose_parents=True,    # <-- PRINT PARENT LISTS (once, in EM order)
-        verbose_fitdag=False     # set True to print parents during each M-step fit
-    )
-
-    # 6) Impute T via mean-aware conditional expectation (posterior mean)
-    Shat_df  = fit['Shat']
-    all_vars = list(Shat_df.columns)
-    idx_T    = all_vars.index('T')
-    idx_obs  = [i for i, v in enumerate(all_vars) if v != 'T']
-    obs_vars = [v for v in all_vars if v != 'T']
-
-    X_obs    = target_df[obs_vars].values
-    mu_O     = X_obs.mean(axis=0)  # target-domain observed means
-
-    Sigma    = Shat_df.values
-    Sigma_oo = Sigma[np.ix_(idx_obs, idx_obs)]
-    Sigma_to = Sigma[idx_T, idx_obs].reshape(1, -1)
-
-    # ===== Choose how to set mu_t (latent mean) =====
-    # Option A (default, modeling choice): assume zero mean for latent
-    #mu_t = 0.0
-
-    # Option B: borrow the source-domain mean (if you want a prior from source)
-    mu_t = float(source_df['T'].mean())
-
-    # Option C: set a custom value from domain knowledge
-    # mu_t = <your_value_here>
-    # ================================================
-
-    # Mean-aware conditional: E[T | x_O] = mu_t + Sigma_to Sigma_oo^{-1} (x_O - mu_O)
-    Sigma_oo_inv = np.linalg.inv(Sigma_oo)
-    W = (Sigma_to @ Sigma_oo_inv).ravel()        # shape (p-1,)
-    Xc = X_obs - mu_O                             # center observed sample-by-sample
-    imputed_T = mu_t + (Xc @ W)                   # shape (n,)
-
-    # 7) Evaluate
-    true_T = target_true_df['T'].values
-    mask   = (~np.isnan(true_T)) & (~np.isnan(imputed_T))
-    true_T = true_T[mask]
-    imputed_T = imputed_T[mask]
-
-    mae = mean_absolute_error(true_T, imputed_T)
-    mse = mean_squared_error(true_T, imputed_T)
-    rmse = np.sqrt(mse)
-    r2  = r2_score(true_T, imputed_T)
-
-    print(f"\nFinal EM results (mean-aware):")
-    print(f"MAE  = {mae:.4f}")
-    print(f"MSE  = {mse:.4f}")
-    print(f"RMSE = {rmse:.4f}")
-    print(f"R^2  = {r2:.4f}")
-
-
-    # 8) Plot True vs Predicted T
-    plt.figure(figsize=(5, 5))
-    plt.scatter(true_T, imputed_T, alpha=0.6, label="Baseline")
-    mn, mx = true_T.min(), true_T.max()
-    plt.plot([mn, mx], [mn, mx], "k--", lw=2)
-    plt.xlabel("True T", fontsize=24)
-    plt.ylabel("Predicted T", fontsize=24)
-    plt.tick_params(axis="both", which="major", labelsize=18)
-    plt.tight_layout()
-    plt.savefig("KiiveriCov.pdf", format="pdf", bbox_inches="tight")
-    plt.show()
-
-    # Optional sign flip (if you want to check identifiability flips)
-    imputed_T_flipped = -imputed_T
-    mae = mean_absolute_error(true_T, imputed_T_flipped)
-    mse = mean_squared_error(true_T, imputed_T_flipped)
-    rmse = np.sqrt(mse)
-    r2 = r2_score(true_T, imputed_T_flipped)
-
-    print(f"\nFinal EM results (after sign flip):")
-    print(f"MAE  = {mae:.4f}")
-    print(f"MSE  = {mse:.4f}")
-    print(f"RMSE = {rmse:.4f}")
-    print(f"R^2  = {r2:.4f}")
-
-    plt.figure(figsize=(5, 5))
-    plt.scatter(true_T, imputed_T_flipped, alpha=0.6, label="Baseline (flipped)")
-    mn, mx = true_T.min(), true_T.max()
-    plt.plot([mn, mx], [mn, mx], "k--", lw=2)
-    plt.xlabel("True T", fontsize=24)
-    plt.ylabel("Predicted T", fontsize=24)
-    plt.tick_params(axis="both", which="major", labelsize=18)
-    plt.tight_layout()
-    plt.savefig("KiiveriCov2.pdf", format="pdf", bbox_inches="tight")
-    plt.show()
