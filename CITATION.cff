@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+title: "EM-Based Transfer Learning for Gaussian Causal Models Under Covariate and Target Shift"
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - family-names: Javidian
+    given-names: Mohammad Ali
+    affiliation: Appalachian State University
+    email: javidianma@appstate.edu
+repository-code: "https://github.com/majavid/ICDM2025"
+license: MIT
+version: "0.1.1"
+preferred-citation:
+  type: article
+  title: "EM-Based Transfer Learning for Gaussian Causal Models Under Covariate and Target Shift"
+  authors:
+    - family-names: Javidian
+      given-names: Mohammad Ali
+  year: 2025
+  journal: "IEEE International Conference on Data Mining (ICDM) 2025"
