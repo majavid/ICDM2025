@@ -1,125 +1,169 @@
-# EM-Based Transfer Learning for Gaussian Causal Models Under Covariate and Target Shift
+# EM-Based Transfer Learning for Gaussian Causal Models Under Covariate & Target Shift
 
-Code and experiments for our paper:
+Code and experiments for the paper:
 
-> **“EM-Based Transfer Learning for Gaussian Causal Models Under Covariate and Target Shift” (ICDM 2025, regular paper)**
+> **“EM-Based Transfer Learning for Gaussian Causal Models Under Covariate and Target Shift”** (ICDM 2025, regular paper)
+
+**Docs:** https://majavid.github.io/ICDM2025/
+![Run demos](https://github.com/majavid/ICDM2025/actions/workflows/run-demos.yml/badge.svg)
+[![Docs](https://github.com/majavid/ICDM2025/actions/workflows/docs.yml/badge.svg)](https://majavid.github.io/ICDM2025/)
 
 ---
 
 ## ✨ What’s in this repo
-- Implementations:
+
+- **Methods**
   - Kiiveri EM (classical latent-variable EM)
-  - **1st-order EM** (gradient/GEM variant)
+  - **First-order EM** (GEM/gradient variant)
   - ECME and PX-EM accelerations
-- Reproducible experiments for:
+- **Reproducible demos/configs** (CLI) for:
   - Synthetic 7-node SEM
   - 64-node MAGIC-IRRI network
   - Sachs single-cell signaling dataset
-- Utilities for DAG-constrained Gaussian SEM fitting
+- **Utilities** for DAG-constrained Gaussian SEM fitting
 
-> If you’re here to **impute a fully missing target variable `T`** in a known DAG under domain shift, jump to [Quickstart](#quickstart).
+If you’re here to **impute a fully missing target `T`** under domain shift with a known DAG, jump to **Quickstart**.
 
 ---
 
 ## 📦 Environment
 
-- Python >= 3.10
-- See [`requirements.txt`](./requirements.txt) for runtime deps
-- Docs deps in [`docs/requirements.txt`](./docs/requirements.txt)
+- Python **≥ 3.10**
+- Runtime deps: see [`requirements.txt`](./requirements.txt)
+- Docs deps: see [`docs/requirements.txt`](./docs/requirements.txt)
 
-Docker (optional):
-- We provide a Docker build recipe in `DockerfileDocs` (rename to `Dockerfile` if you prefer).
-- Add any system libs your extras need (BLAS, graphviz, etc.).
+> Windows note: activate your venv with `.\.venv\Scripts\activate`. On macOS/Linux use `source .venv/bin/activate`.
 
 ---
 
 ## 🚀 Quickstart
 
+### 1) Create & activate a virtualenv, install in editable mode
+
 ```bash
-# 1) create env
-python -m venv .venv && source .venv/bin/activate
+python -m venv .venv
+# Windows
+.\.venv\Scripts\activate
+# macOS/Linux
+# source .venv/bin/activate
+
 pip install -r requirements.txt
+pip install -e .[dev,docs]  # CLI, tests, docs
+````
 
-# 2) run a small synthetic demo
-python src/demos/demo_synthetic_first_order_em.py \
-  --seed 42 --iters 1_000 --tol 1e-6
+### 2) Run demos (tiny synthetic example)
 
-# 3) reproduce a Sachs run (example)
-python src/experiments/sachs/run_em_pipeline.py \
-  --config configs/sachs/t_as_latent.yaml
+```bash
+# Baseline: fit on source (parents-only)
+icdm2025-demo fit-on-source --data_dir data
 
-Outputs (plots, CSV metrics) land in outputs/ by default.
+# First-order EM (mean-aware)
+icdm2025-demo first-order-em --data_dir data
 
-📁 Repo layout
+# ECME and PX-EM
+icdm2025-demo ecme --data_dir data
+icdm2025-demo px-em --data_dir data
+
+# Kiiveri latent EM (fitDagLatent)
+icdm2025-demo kiiveri --data_dir data
+```
+
+Artifacts (plots) land in `outputs/`.
+
+### 3) Reproduce via config (paper-style runs)
+
+```bash
+icdm2025-run --config configs/first_order_em.yaml
+icdm2025-run --config configs/ecme.yaml
+icdm2025-run --config configs/px_em.yaml
+icdm2025-run --config configs/kiiveri.yaml
+```
+
+---
+
+## 📁 Repo layout
+
+```
 .
-├─ src/
-│  ├─ core/          # SEM/DAG primitives: lmfit, fitdag, E-step, etc.
-│  ├─ methods/       # kiiveri_em.py, first_order_em.py, ecme.py, px_em.py
-│  ├─ experiments/   # scripts to reproduce paper tables/figures
-│  └─ demos/         # small runnable examples
-├─ tests/            # unit tests (pytest)
-├─ configs/          # YAML configs for experiments
-├─ data/             # (empty) put datasets or symlinks here; see below
-├─ docs/             # Sphinx (or mkdocs) documentation
+├─ src/icdm2025/
+│  ├─ core/            # DAG/SEM primitives (fitdag, etc.)
+│  ├─ methods/         # first_order_em.py, ecme.py, px_em.py, kiiveri_em.py
+│  ├─ demos/           # CLI-backed demo scripts
+│  └─ experiments/     # run_from_config.py (used by icdm2025-run)
+├─ configs/            # YAML configs for reproducible runs
+├─ data/               # small CSVs for demos; larger datasets not committed
+├─ docs/               # Sphinx sources (docs/source/) → GitHub Pages
+├─ tests/              # pytest smoke tests
+├─ outputs/            # generated figures/artifacts (gitignored)
 ├─ requirements.txt
-├─ docs/requirements.txt
-├─ DockerfileDocs
 └─ README.md
+```
 
-📚 Datasets
+---
 
-Sachs: see instructions in data/README.md (we do not commit raw data).
+## 📚 Datasets
 
-MAGIC-IRRI: pointers and preprocessing scripts in data/magic_irri/.
+* **Synthetic:** CSVs included under `data/` for quick demos.
+* **Sachs:** follow instructions in `docs/` (or add your own CSVs under `data/` with the same column names).
+* **MAGIC-IRRI:** provide CSVs under `data/` (see configs for expected columns / adjacency).
 
-Synthetic: generated on the fly by scripts in src/experiments/synthetic/.
+You can replace the provided `data/*.csv` with your own, as long as the **column names** and **adjacency matrix** (`data/adjacency_matrix.csv`) match.
 
-🧠 Methods overview
+---
 
-Kiiveri EM: classic EM with closed-form E-step for one latent (the target T) and GLS M-step.
+## 🧠 Methods (very brief)
 
-First-order EM: one gradient ascent step on the DAG-constrained covariance per iteration — O(p²) per step.
+* **Kiiveri EM:** classic EM with closed-form E-step for one latent (`T`) and GLS M-step.
+* **First-order EM:** gradient/GEM update on the DAG-constrained covariance (cheap O(p²) step).
+* **ECME:** maximizes observed likelihood wrt the variance of `T` for faster convergence.
+* **PX-EM:** parameter expansion along `T` to improve curvature/conditioning.
 
-ECME: observed-likelihood maximization for the variance of T to accelerate convergence.
+All integrate with a common pipeline; see `icdm2025-run` configs for knobs like `tol`, `max_iter`, `norm`, etc.
 
-PX-EM: parameter expansion in the T direction to improve curvature.
+---
 
-Each method exposes a unified interface:
-dag_fit, Sigma_hat, (mu_hat), iters, converged = method.fit(X_obs, idx_t, amat, Sigma_init, **kwargs)
+## 🧪 Reproducing results
 
-🧪 Reproducing paper results
+* Use the **configs** in `configs/*.yaml` with `icdm2025-run` (above).
+* Outputs include **MAE / RMSE / R²** CSV lines and **PDF plots** (true vs imputed `T`).
 
-See src/experiments/* and the corresponding configs/*.yaml.
-We export:
+---
 
-Per-experiment CSVs with MAE, RMSE, R²
+## 🧾 Citation
 
-Scatter plots (true vs imputed T)
+If you use this software, please cite:
 
-Logs with likelihood/gap diagnostics
-
-Example:
-python src/experiments/magic_irri/run_magic.py --config configs/magic_irri/cov_shift.yaml
-
-🔬 Citing
-
-If you use this code, please cite:
+```bibtex
 @inproceedings{javidian2025emtransfer,
   title={EM-Based Transfer Learning for Gaussian Causal Models Under Covariate and Target Shift},
   author={Javidian, Mohammad Ali},
   booktitle={IEEE International Conference on Data Mining (ICDM)},
   year={2025}
 }
+```
 
-📄 License
+Also see the repository’s [`CITATION.cff`](./CITATION.cff).
 
-MIT — see the [LICENSE](./LICENSE) file.
+---
+
+## 📄 License
+
+**MIT** — see the [LICENSE](./LICENSE).
 SPDX-License-Identifier: MIT
 
-🤝 Contributing
+---
 
-PRs and issues welcome. Run pytest before submitting.
+## 🤝 Contributing
 
-📨 Contact
+PRs and issues welcome. Before submitting:
 
-Mohammad Ali Javidian — javidianma@appstate.edu
+```bash
+pytest -q
+pre-commit run --all-files
+```
+
+---
+
+## 📨 Contact
+
+**Mohammad Ali Javidian** — [javidianma@appstate.edu](mailto:javidianma@appstate.edu)
