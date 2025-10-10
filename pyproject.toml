@@ -1,6 +1,37 @@
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
-]
+requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "icdm2025"
+version = "0.1.0"
+description = "EM-Based Transfer Learning for Gaussian Causal Models Under Covariate and Target Shift"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "Mohammad Ali Javidian", email = "javidianma@appstate.edu" }]
+dependencies = [
+  "numpy>=1.26",
+  "scipy>=1.13",
+  "pandas>=2.2",
+  "networkx>=3.2",
+  "scikit-learn>=1.4",
+  "pyyaml>=6.0",
+  "tqdm>=4.66",
+  "matplotlib>=3.8"
+]
+
+[project.optional-dependencies]
+docs = ["sphinx>=7.2", "furo>=2024.8.6", "myst-parser>=3.0", "sphinx-copybutton>=0.5"]
+dev = ["pytest>=8.0", "pre-commit>=3.7", "ruff>=0.6.0"]
+
+[project.scripts]
+icdm2025-demo = "icdm2025.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["icdm2025", "icdm2025.core", "icdm2025.methods", "icdm2025.demos"]
+
+[tool.setuptools.package-data]
+# Include anything under package if needed (adjust later)
+"icdm2025" = []
