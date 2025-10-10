@@ -1,16 +1,37 @@
-name: Build docs
+name: docs
 
 on:
   push:
-    branches: [ "main", "dev" ]
-  pull_request:
-    branches: [ "main", "dev" ]
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  call_docs_workflow_cicd:
-    name: Call Docs Workflow
-    uses: ASU-CS-Research/OrganizationalWorkflows/.github/workflows/docs.yml@main
-    secrets:
-      CAMPELLCL_APPMAIS_SSH_PRIVATE_KEY_PEM: ${{ secrets.CAMPELLCL_APPMAIS_SSH_PRIVATE_KEY_PEM }}
+  build-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed for gh-pages deploy
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[docs]
+
+      - name: Build Sphinx
+        run: sphinx-build -b html docs/source _site
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: _site
+          force_orphan: true
