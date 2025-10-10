@@ -1,23 +1,33 @@
-FROM sphinxdoc/sphinx:7.3.7
-WORKDIR .
-# Copy source code for autodoc:
-COPY ./src/ ./src/
-# Copy the repositories requirements.txt and package installation files:
-COPY requirements.txt ./requirements.txt
-COPY setup.py ./setup.py
-COPY pyproject.toml ./pyproject.toml
-# TODO: Edit this file and install any relevant os-level packages required to build the documentation for your repo:
-# =========================== For numpy: ===========================
-# RUN apt update
-# Install GCC and other c-lib dependencies:
-# RUN apt install build-essential -y
-# ==================================================================
-# NOTE: Do not remove the lines below this comment:
-# Install the repository's package:
-RUN pip3 install .
-# Copy documentation source files:
-COPY ./docs/source/ ./docs/source/
-COPY ./docs/requirements.txt ./docs/requirements.txt
-# Install documentation specific requirements:
-RUN pip3 install -r ./docs/requirements.txt
-CMD ["sphinx-build", "-M", "html", "./docs/source" ,"./docs/build"]
+# Start from slim, good for reproducibility and speed
+FROM python:3.10-slim
+
+# Prevent interactive prompts during apt installs
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+# System deps (minimal). Add more only if actually needed.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    git \
+    graphviz \
+ && rm -rf /var/lib/apt/lists/*
+
+# Workdir
+WORKDIR /app
+
+# Copy dependency lists first (better Docker layer caching)
+COPY requirements.txt ./
+COPY docs/requirements.txt ./docs/requirements.txt
+
+# Install Python deps (runtime + docs)
+RUN python -m pip install --upgrade pip \
+ && pip install -r requirements.txt \
+ && pip install -r docs/requirements.txt
+
+# Copy the rest of the repo
+COPY . .
+
+# Default command: show help or run a small check
+CMD ["python", "-c", "import numpy, scipy, pandas, networkx; print('env ok')"]
