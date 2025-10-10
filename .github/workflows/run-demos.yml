@@ -1,0 +1,42 @@
+name: run-demos
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [ main ]
+
+jobs:
+  demos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install package + extras
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[dev]
+
+      - name: Smoke tests
+        run: pytest -q
+
+      - name: Run demos
+        run: |
+          mkdir -p outputs
+          icdm2025-demo fit-on-source --data_dir data
+          icdm2025-demo first-order-em --data_dir data
+          icdm2025-demo ecme --data_dir data
+          icdm2025-demo px-em --data_dir data
+          icdm2025-demo kiiveri --data_dir data
+        env:
+          MPLBACKEND: Agg  # headless plotting for CI
+
+      - name: Upload outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-outputs
+          path: outputs/*
+          if-no-files-found: error
