@@ -1,0 +1,3 @@
+data_dir: data
+outputs_dir: outputs
+method: fit_on_source

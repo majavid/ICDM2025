@@ -1,0 +1,5 @@
+data_dir: data
+outputs_dir: outputs
+method: px_em
+tol: 1.0e-5
+max_iter: 1500

@@ -15,9 +15,10 @@ pandas >= 1.4
 """
 
 from __future__ import annotations
+
 import numpy as np
 import pandas as pd
-from numpy.linalg import inv, solve, det
+from numpy.linalg import det, inv, solve
 
 
 # --------------------------------------------------------------------------- #
@@ -26,6 +27,7 @@ from numpy.linalg import inv, solve, det
 def symmetrize(M: np.ndarray) -> np.ndarray:
     return 0.5 * (M + M.T)
 
+
 def nearest_spd(A: np.ndarray, eps: float = 1e-10) -> np.ndarray:
     """Project a symmetric matrix to the nearest SPD by eigenvalue clipping."""
     A = symmetrize(A)
@@ -33,8 +35,10 @@ def nearest_spd(A: np.ndarray, eps: float = 1e-10) -> np.ndarray:
     w = np.maximum(w, eps)
     return (V * w) @ V.T
 
-def safe_solve_psd(Sxx: np.ndarray, sxy: np.ndarray,
-                   ridge: float = 1e-10, max_tries: int = 6) -> np.ndarray:
+
+def safe_solve_psd(
+    Sxx: np.ndarray, sxy: np.ndarray, ridge: float = 1e-10, max_tries: int = 6
+) -> np.ndarray:
     """
     Solve Sxx * beta = sxy robustly. Try direct solve; if singular/ill-conditioned,
     add increasing ridge to the diagonal; fall back to pinv at the end.
@@ -66,6 +70,7 @@ def random_corr(p: int) -> np.ndarray:
     d = np.sqrt(np.diag(s))
     return s / d[:, None] / d[None, :]
 
+
 def setvar1(v: np.ndarray, z: int, paz_mask: np.ndarray, norm: int = 1) -> np.ndarray:
     """Normalise the latent so that either V[z,z] == 1 (norm=1)
     or the *residual* variance of z equals 1 (norm=2)."""
@@ -82,6 +87,7 @@ def setvar1(v: np.ndarray, z: int, paz_mask: np.ndarray, norm: int = 1) -> np.nd
     v[:, z] *= scale
     return v
 
+
 def cmqi(syy: np.ndarray, sigma: np.ndarray, z: int) -> np.ndarray:
     """
     Conditional covariance matrix C(M|Q) (Kiiveri, 1987).
@@ -96,14 +102,14 @@ def cmqi(syy: np.ndarray, sigma: np.ndarray, z: int) -> np.ndarray:
     qzz = q[z, z]
     qzy = q[z, y_idx]
 
-    b = -qzy / qzz            # shape (p,)
-    bs = b @ syy              # shape (p,)
+    b = -qzy / qzz  # shape (p,)
+    bs = b @ syy  # shape (p,)
 
     e = np.zeros_like(sigma)
-    e[np.ix_(y_idx, y_idx)] = syy          # S_y|y
-    e[y_idx, z] = bs                       # S_y|z
-    e[z, y_idx] = bs                       # S_z|y (sym.)
-    e[z, z] = bs @ b + 1.0 / qzz           # S_z|z
+    e[np.ix_(y_idx, y_idx)] = syy  # S_y|y
+    e[y_idx, z] = bs  # S_y|z
+    e[z, y_idx] = bs  # S_z|y (sym.)
+    e[z, z] = bs @ b + 1.0 / qzz  # S_z|z
     return e
 
 
@@ -124,60 +130,58 @@ def print_parent_lists(nodes: list[str], amat_np: np.ndarray) -> None:
 # --------------------------------------------------------------------------- #
 #  Regression helper with optional fixed coefficients                         #
 # --------------------------------------------------------------------------- #
-def lmfit(s: np.ndarray, y: int, x: list[int]) -> np.ndarray:
+
+
+def lmfit(s: np.ndarray, y: int, x: list[int], z: list[int] | None = None) -> np.ndarray:
     """Ordinary least squares for a DAG node.
 
     Fits a regression of node ``y`` on its parent indices ``x`` using the
-    covariance matrix ``s`` (shape p×p).
+    covariance matrix ``s`` (shape p×p). Optionally accepts a list ``z`` of
+    fixed/indicator positions to mark (set to 1.0 in the output vector).
 
     Args:
-        s: Covariance matrix (p × p).
+        s: Covariance matrix (p × p), symmetric.
         y: Index of the child node.
         x: List of parent indices for node ``y``.
+        z: Optional list of additional indices to mark as fixed (set to 1.0).
 
     Returns:
         np.ndarray: Length-``p`` vector ``m`` where:
             - ``m[parent] = beta`` for each parent in ``x``
             - ``m[y]`` is the residual variance
+            - ``m[z] = 1.0`` for any provided fixed indices (if any)
     """
     z = z or []
     p = s.shape[0]
+    m = np.zeros(p, dtype=float)
 
-    # β̂ = (Sxx)^{-1} (Sxy − Σ_{j∈z} Sxj)
-    s = symmetrize(s)
-    sxy = s[np.ix_(x, [y])].flatten()
-    if z:
-        sxy -= s[np.ix_(x, z)].sum(axis=1)
-
-    Sxx = s[np.ix_(x, x)]
-    bxy = safe_solve_psd(Sxx, sxy)  # robust solve
-
-    out = np.zeros(p)
-    out[x] = bxy
-    out[z] = 1.0  # fixed
-
-    # residual variance
-    xz = x + z
-    if xz:
-        b = out[xz][:, None]
-        sxz = symmetrize(s[np.ix_(xz, xz)])
-        inner = sxz @ b - 2 * s[np.ix_(xz, [y])]
-        res = s[y, y] + (b.T @ inner).item()
+    if x:
+        S_xx = s[np.ix_(x, x)]
+        S_xy = s[np.ix_(x, [y])].reshape(-1)
+        beta = np.linalg.solve(S_xx, S_xy)
+        m[x] = beta
+        # residual variance
+        m[y] = float(s[y, y] - S_xy @ beta)
     else:
-        res = s[y, y]
-    out[y] = float(res)
-    return out
+        # no parents: residual variance equals marginal variance
+        m[y] = float(s[y, y])
+
+    if z:
+        m[z] = 1.0
+    return m
 
 
 # --------------------------------------------------------------------------- #
 #  DAG fitting (GLS) with orientation amat[j,i]==1 (j is parent of i)        #
 # --------------------------------------------------------------------------- #
-def fitdag(amat: np.ndarray,
-           s: np.ndarray,
-           n: int,
-           constr: np.ndarray | None = None,
-           node_names: list[str] | None = None,
-           verbose_fitdag: bool = False) -> dict:
+def fitdag(
+    amat: np.ndarray,
+    s: np.ndarray,
+    n: int,
+    constr: np.ndarray | None = None,
+    node_names: list[str] | None = None,
+    verbose_fitdag: bool = False,
+) -> dict:
     """
     Fast GLS fitting of a recursive DAG with independent errors.
     Returns A, Delta, Shat and Khat = Shat⁻¹.
@@ -198,8 +202,10 @@ def fitdag(amat: np.ndarray,
             if node_names is None:
                 print(f"[fitdag] node {i} parents idx={parents}")
             else:
-                print(f"[fitdag] node {i} ({node_names[i]}) parents idx={parents} "
-                      f"names={[node_names[j] for j in parents]}")
+                print(
+                    f"[fitdag] node {i} ({node_names[i]}) parents idx={parents} "
+                    f"names={[node_names[j] for j in parents]}"
+                )
 
         if not parents:
             delta[i] = s[i, i]
@@ -236,18 +242,20 @@ def deviance(k: np.ndarray, s: np.ndarray, n: int) -> float:
 # --------------------------------------------------------------------------- #
 #  EM with one latent                                                         #
 # --------------------------------------------------------------------------- #
-def fitDagLatent(amat: pd.DataFrame,
-                 syy: pd.DataFrame,
-                 sigma_old: np.ndarray,
-                 n: int,
-                 latent: str,
-                 norm: int = 1,
-                 seed: int | None = None,
-                 maxit: int = 9000,
-                 tol: float = 1e-6,
-                 verbose: bool = False,
-                 verbose_parents: bool = True,
-                 verbose_fitdag: bool = False) -> dict:
+def fitDagLatent(
+    amat: pd.DataFrame,
+    syy: pd.DataFrame,
+    sigma_old: np.ndarray,
+    n: int,
+    latent: str,
+    norm: int = 1,
+    seed: int | None = None,
+    maxit: int = 9000,
+    tol: float = 1e-6,
+    verbose: bool = False,
+    verbose_parents: bool = True,
+    verbose_fitdag: bool = False,
+) -> dict:
     """
     EM algorithm for a recursive DAG with one latent variable.
 
@@ -303,9 +311,7 @@ def fitDagLatent(amat: pd.DataFrame,
         q_tilde = nearest_spd(q_tilde, eps=1e-10)
 
         # M-step
-        fit = fitdag(amat.values, q_tilde, n,
-                     node_names=nod,
-                     verbose_fitdag=verbose_fitdag)
+        fit = fitdag(amat.values, q_tilde, n, node_names=nod, verbose_fitdag=verbose_fitdag)
         sigma_new = fit["Shat"]
         sigma_new = setvar1(sigma_new, z_idx, paz_mask, norm)
 
@@ -330,13 +336,13 @@ def fitDagLatent(amat: pd.DataFrame,
     final = fitdag(amat.values, shat, n, node_names=nod, verbose_fitdag=False)
 
     # Optional sign normalization for latent (if your convention prefers it)
-    shat[z_idx, :]       *= -1
-    shat[:, z_idx]       *= -1
+    shat[z_idx, :] *= -1
+    shat[:, z_idx] *= -1
     final["A"][z_idx, :] *= -1
     final["A"][:, z_idx] *= -1
 
     # degrees of freedom (use observed p only)
-    p_obs = len(nod) - 1              # exclude the latent
+    p_obs = len(nod) - 1  # exclude the latent
     edges = (amat.values == 1).sum()
     df = p_obs * (p_obs + 1) // 2 - edges - p_obs
 

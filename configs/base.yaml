@@ -1,0 +1,11 @@
+data_dir: data
+outputs_dir: outputs
+
+method: fit_on_source   # one of: fit_on_source, first_order_em, ecme, px_em, kiiveri
+
+tol: 1.0e-6
+max_iter: 5000
+
+# kiiveri-only
+norm: 2
+maxit: 3000

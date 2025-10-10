@@ -1,0 +1,6 @@
+data_dir: data
+outputs_dir: outputs
+method: kiiveri
+norm: 2
+tol: 1.0e-6
+maxit: 3000

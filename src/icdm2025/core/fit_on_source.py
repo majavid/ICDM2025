@@ -5,9 +5,11 @@
 # Licensed under the MIT License – see LICENSE in the repo root.
 # src/icdm2025/core/fit_on_source.py
 from __future__ import annotations
+
 import numpy as np
 
 __all__ = ["lmfit", "fitdag"]
+
 
 def lmfit(s: np.ndarray, y: int, x: list[int]) -> np.ndarray:
     """
@@ -20,12 +22,15 @@ def lmfit(s: np.ndarray, y: int, x: list[int]) -> np.ndarray:
         m[y] = float(s[y, y])
         return m
     S_xx = s[np.ix_(x, x)]
-    S_xy = s[np.ix_(x, [y])].reshape(-1,)
+    S_xy = s[np.ix_(x, [y])].reshape(
+        -1,
+    )
     beta = np.linalg.solve(S_xx, S_xy)
     for idx, parent in enumerate(x):
         m[parent] = beta[idx]
     m[y] = float(s[y, y] - S_xy @ beta)
     return m
+
 
 def fitdag(amat: np.ndarray, s: np.ndarray, parent_list: list[list[int]]) -> dict:
     """
@@ -42,7 +47,7 @@ def fitdag(amat: np.ndarray, s: np.ndarray, parent_list: list[list[int]]) -> dic
         parents = parent_list[i]
         if not parents:
             Delta[i] = float(s[i, i])
-            A[i, i]  = 1.0
+            A[i, i] = 1.0
         else:
             m = lmfit(s, y=i, x=parents)
             for parent in parents:

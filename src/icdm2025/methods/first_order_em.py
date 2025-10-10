@@ -4,13 +4,11 @@
 # This file is part of the ICDM2025 project.
 # Licensed under the MIT License – see LICENSE in the repo root.
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 # =========================
 # (1) Local OLS from covariance (node i on parents)
 # =========================
+
 
 def lmfit(s: np.ndarray, y: int, x: list[int]) -> np.ndarray:
     """
@@ -23,16 +21,20 @@ def lmfit(s: np.ndarray, y: int, x: list[int]) -> np.ndarray:
         m[y] = s[y, y]
         return m
     S_xx = s[np.ix_(x, x)]
-    S_xy = s[np.ix_(x, [y])].reshape(-1,)
+    S_xy = s[np.ix_(x, [y])].reshape(
+        -1,
+    )
     beta = np.linalg.solve(S_xx, S_xy)
     for idx, parent in enumerate(x):
         m[parent] = beta[idx]
     m[y] = s[y, y] - S_xy @ beta
     return m
 
+
 # =========================
 # (2) Fit DAG-constrained Gaussian (A, Delta) from covariance
 # =========================
+
 
 def fitdag(amat: np.ndarray, s: np.ndarray, parent_list: list[list[int]]) -> dict:
     """
@@ -56,11 +58,13 @@ def fitdag(amat: np.ndarray, s: np.ndarray, parent_list: list[list[int]]) -> dic
             Delta[i] = m[i]
     Khat = A.T @ np.diag(1.0 / Delta) @ A
     Shat = np.linalg.inv(Khat)
-    return {'A': A, 'Delta': Delta, 'Shat': Shat}
+    return {"A": A, "Delta": Delta, "Shat": Shat}
+
 
 # =========================
 # (3) Helpers for conditional of T | O under (mu, Sigma)
 # =========================
+
 
 def conditional_params(Sigma: np.ndarray, idx_t: int, ridge: float = 0.0):
     """
@@ -77,16 +81,18 @@ def conditional_params(Sigma: np.ndarray, idx_t: int, ridge: float = 0.0):
     V_t = Sigma[idx_t, idx_t] - float(Sigma_to @ Sigma_oo_inv @ Sigma_to.T)
     return O, W, V_t, Sigma_oo_inv
 
+
 # =========================
 # (4) Mean-aware E-step: expected complete-data covariance + updated mean
 # =========================
+
 
 def E_step_vec_mean_aware(
     X_obs: np.ndarray,
     idx_t: int,
     Sigma_hat: np.ndarray,
     mu: np.ndarray | None = None,
-    ridge: float = 0.0
+    ridge: float = 0.0,
 ) -> tuple[np.ndarray, np.ndarray]:
     """
     Mean-aware E-step that returns:
@@ -111,8 +117,8 @@ def E_step_vec_mean_aware(
         mu_t = float(mu[idx_t])
 
     # Center observed and compute conditional means for T
-    Xc = X_obs - mu_O                   # (n x (p-1))
-    MU = (Xc @ W.reshape(-1, 1)) + mu_t # (n x 1), rowwise E[T|x_O]
+    Xc = X_obs - mu_O  # (n x (p-1))
+    MU = (Xc @ W.reshape(-1, 1)) + mu_t  # (n x 1), rowwise E[T|x_O]
 
     # Updated means
     mu_O_new = mu_O
@@ -126,8 +132,8 @@ def E_step_vec_mean_aware(
     # Q_oo: sample covariance of observed block (ddof=1)
     Q_oo = (Xc.T @ Xc) / denom
     # Q_ot: Cov(X_O, T) = Cov(X_O, E[T|X_O]) (since Var(T|X_O) independent of X_O)
-    tc = MU - mu_t_new                  # center by updated mu_t
-    Q_ot = (Xc.T @ tc) / denom          # ((p-1) x 1)
+    tc = MU - mu_t_new  # center by updated mu_t
+    Q_ot = (Xc.T @ tc) / denom  # ((p-1) x 1)
     Q_to = Q_ot.T
     # Q_tt: Var(T) = E[Var(T|X_O)] + Var(E[T|X_O])
     var_mu = float(((tc) ** 2).sum() / denom)
@@ -141,9 +147,11 @@ def E_step_vec_mean_aware(
     Q = 0.5 * (Q + Q.T)
     return Q, mu_new
 
+
 # =========================
 # (5) EM algorithm (mean-aware throughout; returns mu_hat and Sigma_hat)
 # =========================
+
 
 def EM_algorithm(
     X_obs: np.ndarray,
@@ -155,7 +163,7 @@ def EM_algorithm(
     tol: float = 1e-6,
     max_iter: int = 50000,
     ridge: float = 0.0,
-    print_every: int = 1000
+    print_every: int = 1000,
 ) -> tuple[dict, np.ndarray, np.ndarray, int, bool]:
     """
     EM with mean-aware E-step (updates mu) and DAG-constrained M-step (updates Sigma).
@@ -170,19 +178,15 @@ def EM_algorithm(
 
         # E-step: get expected covariance and updated mean
         Q_hat, mu_hat = E_step_vec_mean_aware(
-            X_obs=X_obs,
-            idx_t=idx_t,
-            Sigma_hat=Sigma_hat,
-            mu=mu_hat,
-            ridge=ridge
+            X_obs=X_obs, idx_t=idx_t, Sigma_hat=Sigma_hat, mu=mu_hat, ridge=ridge
         )
 
         # M-step: fit DAG from expected covariance
         dag_fit = fitdag(amat, Q_hat, parent_list)
-        Sigma_hat = dag_fit['Shat']
+        Sigma_hat = dag_fit["Shat"]
 
         # Convergence on Sigma (you may also track ||mu_new - mu_old|| if desired)
-        diff_norm = np.linalg.norm(Sigma_hat - Sigma_prev, ord='fro')
+        diff_norm = np.linalg.norm(Sigma_hat - Sigma_prev, ord="fro")
         if it == 1 or (print_every and it % print_every == 0):
             print(f"Iteration {it}: ||Σ_new − Σ_old||_F = {diff_norm:.2e}")
         if diff_norm < tol:

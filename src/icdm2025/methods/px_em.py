@@ -4,9 +4,7 @@
 # This file is part of the ICDM2025 project.
 # Licensed under the MIT License – see LICENSE in the repo root.
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+
 
 # --- (1) Helper functions: lmfit and fitdag (exactly as before) -------------
 def lmfit(s: np.ndarray, y: int, x: list, z=None) -> np.ndarray:
@@ -17,12 +15,15 @@ def lmfit(s: np.ndarray, y: int, x: list, z=None) -> np.ndarray:
         return m
 
     S_xx = s[np.ix_(x, x)]
-    S_xy = s[np.ix_(x, [y])].reshape(-1,)
+    S_xy = s[np.ix_(x, [y])].reshape(
+        -1,
+    )
     β = np.linalg.solve(S_xx, S_xy)
     for idx, parent in enumerate(x):
         m[parent] = β[idx]
     m[y] = s[y, y] - S_xy @ β
     return m
+
 
 def fitdag(amat: np.ndarray, s: np.ndarray, n: int, constr: np.ndarray | None = None) -> dict:
     p = s.shape[0]
@@ -47,7 +48,8 @@ def fitdag(amat: np.ndarray, s: np.ndarray, n: int, constr: np.ndarray | None = 
 
     Khat = A.T @ np.diag(1.0 / Delta) @ A
     Shat = np.linalg.inv(Khat)
-    return {'A': A, 'Delta': Delta, 'Shat': Shat, 'Khat': Khat}
+    return {"A": A, "Delta": Delta, "Shat": Shat, "Khat": Khat}
+
 
 # --- (2) E-step (unchanged) -------------------------------------------------
 def E_step(X_obs: np.ndarray, idx_t: int, Sigma_hat: np.ndarray) -> np.ndarray:
@@ -78,36 +80,59 @@ def E_step(X_obs: np.ndarray, idx_t: int, Sigma_hat: np.ndarray) -> np.ndarray:
 
     return Q_accum / n
 
+
 # --- (2b) Utilities ---------------------------------------------------------
 def sigma_from_params(A: np.ndarray, Delta: np.ndarray) -> np.ndarray:
     invA = np.linalg.inv(A)
     return invA @ np.diag(Delta) @ invA.T
+
 
 def observed_cov(X_obs: np.ndarray) -> np.ndarray:
     Xc = X_obs - X_obs.mean(axis=0, keepdims=True)
     n = max(1, Xc.shape[0])
     return (Xc.T @ Xc) / n
 
+
 def px_expand_Q(Q: np.ndarray, idx_t: int, alpha: float) -> np.ndarray:
-    """Apply expansion X' = G X with G=diag(..., α at t, ...) to complete-data moments."""
-    p = Q.shape[0]
-    G = np.ones(p); G[idx_t] = alpha
+    """Apply expansion X' = G X with G diagonal (α at index t) to complete-data moments Q.
+
+    Scales row t and column t of Q by α (i.e., Q' = D Q D with D=diag(..., α at t, ...)).
+
+    Args:
+        Q: Square moment matrix (p×p).
+        idx_t: Index of target variable t (0-based).
+        alpha: Expansion factor applied at index t.
+
+    Returns:
+        np.ndarray: Expanded moment matrix Q'.
+    """
+    if Q.ndim != 2 or Q.shape[0] != Q.shape[1]:
+        raise ValueError("Q must be a square 2D matrix.")
+    if not (0 <= idx_t < Q.shape[0]):
+        raise IndexError("idx_t out of range for Q.")
+    if not np.isfinite(alpha):
+        raise ValueError("alpha must be a finite number.")
+
     Q_exp = Q.copy()
-    # scale row/col t
     Q_exp[:, idx_t] *= alpha
     Q_exp[idx_t, :] *= alpha
     return Q_exp
 
+
 def px_reduce_Sigma(Shat_expanded: np.ndarray, idx_t: int, alpha: float) -> np.ndarray:
     """Reduce back to original coordinates: Σ = G^{-1} Σ' G^{-1}."""
     p = Shat_expanded.shape[0]
-    Ginv = np.ones(p); Ginv[idx_t] = 1.0 / max(alpha, 1e-12)
+    Ginv = np.ones(p)
+    Ginv[idx_t] = 1.0 / max(alpha, 1e-12)
     # Σ = D Σ' D where D=diag(Ginv) because G is diagonal
     D = np.diag(Ginv)
     return D @ Shat_expanded @ D
 
+
 # --- (2c) Choose α to accelerate (PX choice guided by observed likelihood) ---
-def choose_alpha_px(A: np.ndarray, Delta: np.ndarray, idx_t: int, S_oo: np.ndarray, O: list[int]) -> float:
+def choose_alpha_px(
+    A: np.ndarray, Delta: np.ndarray, idx_t: int, S_oo: np.ndarray, O: list[int]
+) -> float:
     """
     Use the same rank-one geometry as ECME to pick a good α.
     Let Σ_oo = S0 + Δ_t b b^T where b = (A^{-1})_{O,t}, S0 = Σ_oo - Δ_t b b^T.
@@ -145,15 +170,18 @@ def choose_alpha_px(A: np.ndarray, Delta: np.ndarray, idx_t: int, S_oo: np.ndarr
     alpha = float(np.sqrt(alpha2))
     return alpha
 
+
 # --- (3) PX-EM routine ------------------------------------------------------
-def PX_EM_algorithm(X_obs: np.ndarray,
-                    idx_t: int,
-                    amat: np.ndarray,
-                    Sigma_init: np.ndarray,
-                    n: int,
-                    tol: float = 1e-6,
-                    max_iter: int = 9000,
-                    verbose_every: int = 50):
+def PX_EM_algorithm(
+    X_obs: np.ndarray,
+    idx_t: int,
+    amat: np.ndarray,
+    Sigma_init: np.ndarray,
+    n: int,
+    tol: float = 1e-6,
+    max_iter: int = 9000,
+    verbose_every: int = 50,
+):
     """
     PX-EM for one fully-missing node T.
 
@@ -180,8 +208,8 @@ def PX_EM_algorithm(X_obs: np.ndarray,
 
         # (2) Provisional M-step (gives current A, Δ used to pick α)
         dag_tmp = fitdag(amat=amat, s=Q_hat, n=n, constr=None)
-        A_tmp = dag_tmp['A'].copy()
-        Delta_tmp = dag_tmp['Delta'].copy()
+        A_tmp = dag_tmp["A"].copy()
+        Delta_tmp = dag_tmp["Delta"].copy()
 
         # (3) Pick α
         alpha = choose_alpha_px(A_tmp, Delta_tmp, idx_t, S_oo, O)
@@ -191,13 +219,13 @@ def PX_EM_algorithm(X_obs: np.ndarray,
 
         # (5) M-step on expanded stats
         dag_fit_exp = fitdag(amat=amat, s=Q_exp, n=n, constr=None)
-        Shat_exp = dag_fit_exp['Shat']
+        Shat_exp = dag_fit_exp["Shat"]
 
         # (6) Reduce back to original coordinates
         Sigma_hat = px_reduce_Sigma(Shat_exp, idx_t, alpha)
 
         # Convergence check
-        diff_norm = np.linalg.norm(Sigma_hat - Sigma_prev, ord='fro')
+        diff_norm = np.linalg.norm(Sigma_hat - Sigma_prev, ord="fro")
         if it == 1 or (verbose_every and it % verbose_every == 0):
             print(f"[PX-EM] Iter {it}: ||Σ_new − Σ_old||_F = {diff_norm:.6e} | α={alpha:.3e}")
         if diff_norm < tol:
@@ -206,7 +234,9 @@ def PX_EM_algorithm(X_obs: np.ndarray,
             break
 
     if not converged:
-        print(f"[PX-EM] Did not converge within {max_iter} iterations. Final ||ΔΣ||_F = {diff_norm:.6e}")
+        print(
+            f"[PX-EM] Did not converge within {max_iter} iterations. Final ||ΔΣ||_F = {diff_norm:.6e}"
+        )
 
     # Optionally refit DAG on the final Σ to return A,Δ consistent with Σ_hat
     dag_fit_final = fitdag(amat=amat, s=Sigma_hat, n=n, constr=None)

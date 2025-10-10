@@ -7,13 +7,14 @@
 from __future__ import annotations
 
 # Re-export import-safe implementations (no I/O here)
-from .fit_on_source import lmfit, fitdag
+from .fit_on_source import fitdag, lmfit
 
 __all__ = ["lmfit", "fitdag"]
 
 # Optional: dev-only smoke test (no filesystem access)
 if __name__ == "__main__":
     import numpy as np
+
     # Tiny check: 2-node DAG with no parents
     s = np.array([[1.0, 0.0], [0.0, 1.0]])
     amat = np.zeros((2, 2), dtype=int)

@@ -5,14 +5,15 @@
 # Licensed under the MIT License – see LICENSE in the repo root.
 # demos/kiiveri_demo.py
 import os
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from numpy.linalg import solve
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 # Import Kiiveri module (algorithms only)
-from icdm2025.methods.kiiveri_em import fitDagLatent, fitdag
+from icdm2025.methods.kiiveri_em import fitdag, fitDagLatent
 
 
 def _metrics(y_true: np.ndarray, y_pred: np.ndarray):
@@ -33,7 +34,7 @@ def main(data_dir: str = "data", norm: int = 2, tol: float = 1e-6, maxit: int = 
     amat_df.index = amat_df.index.astype(str).str.strip()
     amat_df.columns = amat_df.columns.astype(str).str.strip()
     nodes = list(amat_df.index)
-    p = len(nodes)
+    # p = len(nodes)
     amat = amat_df.values.astype(int)
 
     # --- Source fit → Sigma_init for latent run ---
@@ -72,7 +73,7 @@ def main(data_dir: str = "data", norm: int = 2, tol: float = 1e-6, maxit: int = 
     X_obs = target_df[obs_vars].values  # (n × |O|)
     mu_O = X_obs.mean(axis=0)  # sample mean of observed
     Sigma = Shat_df.values
-    Sigma_oo = Sigma[np.ix_(idx_obs, idx_obs)]   # |O|×|O|
+    Sigma_oo = Sigma[np.ix_(idx_obs, idx_obs)]  # |O|×|O|
     Sigma_to = Sigma[idx_T, idx_obs].reshape(1, -1)  # 1×|O|
 
     # mean of T can be set from source or 0 — here use source mean of T if present

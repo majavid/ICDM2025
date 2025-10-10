@@ -4,9 +4,7 @@
 # This file is part of the ICDM2025 project.
 # Licensed under the MIT License – see LICENSE in the repo root.
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+
 
 # ===========================
 # (1) Helper functions (unchanged): lmfit, fitdag
@@ -18,12 +16,15 @@ def lmfit(s: np.ndarray, y: int, x: list, z=None) -> np.ndarray:
         m[y] = s[y, y]
         return m
     S_xx = s[np.ix_(x, x)]
-    S_xy = s[np.ix_(x, [y])].reshape(-1,)
+    S_xy = s[np.ix_(x, [y])].reshape(
+        -1,
+    )
     β = np.linalg.solve(S_xx, S_xy)
     for idx, parent in enumerate(x):
         m[parent] = β[idx]
     m[y] = s[y, y] - S_xy @ β
     return m
+
 
 def fitdag(amat: np.ndarray, s: np.ndarray, n: int, constr: np.ndarray | None = None) -> dict:
     """
@@ -52,7 +53,8 @@ def fitdag(amat: np.ndarray, s: np.ndarray, n: int, constr: np.ndarray | None = 
     # Model-implied covariance: Sigma = A^{-1} diag(Delta) A^{-T}
     Khat = A.T @ np.diag(1.0 / Delta) @ A
     Shat = np.linalg.inv(Khat)
-    return {'A': A, 'Delta': Delta, 'Shat': Shat, 'Khat': Khat}
+    return {"A": A, "Delta": Delta, "Shat": Shat, "Khat": Khat}
+
 
 # ===========================
 # (2) E-step: expected complete-data covariance with one fully-missing node T
@@ -91,6 +93,7 @@ def E_step(X_obs: np.ndarray, idx_t: int, Sigma_hat: np.ndarray) -> np.ndarray:
 
     return Q_accum / n
 
+
 # ===========================
 # (3) Utilities for ECME
 # ===========================
@@ -99,12 +102,15 @@ def sigma_from_params(A: np.ndarray, Delta: np.ndarray) -> np.ndarray:
     invA = np.linalg.inv(A)
     return invA @ np.diag(Delta) @ invA.T
 
-def ecme_update_delta_t_observed_ll(A: np.ndarray,
-                                    Delta: np.ndarray,
-                                    idx_t: int,
-                                    S_oo: np.ndarray,
-                                    O: list[int],
-                                    jitter: float = 1e-9) -> float:
+
+def ecme_update_delta_t_observed_ll(
+    A: np.ndarray,
+    Delta: np.ndarray,
+    idx_t: int,
+    S_oo: np.ndarray,
+    O: list[int],
+    jitter: float = 1e-9,
+) -> float:
     """
     ECME 'Either' step: with A, Delta_{-t} fixed, update Delta_t by maximizing
     the observed-data Gaussian log-likelihood for the observed block O.
@@ -117,7 +123,7 @@ def ecme_update_delta_t_observed_ll(A: np.ndarray,
 
     Returns the new (positive) Delta_t.
     """
-    p = A.shape[0]
+    _ = A.shape[0]
     t = idx_t
     invA = np.linalg.inv(A)
     b_full = invA[:, t]
@@ -139,9 +145,9 @@ def ecme_update_delta_t_observed_ll(A: np.ndarray,
         S0 = S0 + jitter * np.eye(S0.shape[0])
         S0_inv = np.linalg.inv(S0)
 
-    u = S0_inv @ b                       # (|O| x 1)
-    c = float(b.T @ u)                   # scalar > 0
-    d = float(u.T @ S_oo @ u)            # scalar >= 0
+    u = S0_inv @ b  # (|O| x 1)
+    c = float(b.T @ u)  # scalar > 0
+    d = float(u.T @ S_oo @ u)  # scalar >= 0
 
     eps = 1e-12
     if c <= eps:
@@ -154,17 +160,20 @@ def ecme_update_delta_t_observed_ll(A: np.ndarray,
 
     return float(Delta_t_new)
 
+
 # ===========================
 # (4) ECME routine
 # ===========================
-def ECME_algorithm(X_obs: np.ndarray,
-                   idx_t: int,
-                   amat: np.ndarray,
-                   Sigma_init: np.ndarray,
-                   n: int,
-                   tol: float = 1e-6,
-                   max_iter: int = 9000,
-                   verbose_every: int = 50):
+def ECME_algorithm(
+    X_obs: np.ndarray,
+    idx_t: int,
+    amat: np.ndarray,
+    Sigma_init: np.ndarray,
+    n: int,
+    tol: float = 1e-6,
+    max_iter: int = 9000,
+    verbose_every: int = 50,
+):
     """
     ECME for single fully-missing node T.
     - E-step: compute Q_hat = E[XX^T | X_O, Sigma_hat]
@@ -177,7 +186,7 @@ def ECME_algorithm(X_obs: np.ndarray,
     p = Sigma_init.shape[0]
     O = [i for i in range(p) if i != idx_t]
     Xc = X_obs - X_obs.mean(axis=0, keepdims=True)
-    S_oo = (Xc.T @ Xc) / Xc.shape[0]   # (|O| x |O|)
+    S_oo = (Xc.T @ Xc) / Xc.shape[0]  # (|O| x |O|)
 
     Sigma_hat = Sigma_init.copy()
     converged = False
@@ -190,8 +199,8 @@ def ECME_algorithm(X_obs: np.ndarray,
 
         # --- CM-step (complete-data maximization via DAG OLS)
         dag_fit = fitdag(amat=amat, s=Q_hat, n=n, constr=None)
-        A = dag_fit['A'].copy()
-        Delta = dag_fit['Delta'].copy()
+        A = dag_fit["A"].copy()
+        Delta = dag_fit["Delta"].copy()
 
         # --- CE-step (observed-data maximization for Delta_t)
         Delta_t_new = ecme_update_delta_t_observed_ll(A, Delta, idx_t, S_oo, O)
@@ -200,18 +209,20 @@ def ECME_algorithm(X_obs: np.ndarray,
         # Update Sigma from (A, Delta)
         Sigma_hat = sigma_from_params(A, Delta)
 
-        diff_norm = np.linalg.norm(Sigma_hat - Sigma_prev, ord='fro')
+        diff_norm = np.linalg.norm(Sigma_hat - Sigma_prev, ord="fro")
         if it == 1 or (verbose_every and it % verbose_every == 0):
-            print(f"[ECME] Iter {it}: ||Σ_new − Σ_old||_F = {diff_norm:.6e} | Δ_t={Delta_t_new:.6e}")
+            print(
+                f"[ECME] Iter {it}: ||Σ_new − Σ_old||_F = {diff_norm:.6e} | Δ_t={Delta_t_new:.6e}"
+            )
 
         if diff_norm < tol:
             converged = True
             print(f"[ECME] Converged at iter {it} (||ΔΣ||_F = {diff_norm:.6e} < tol).")
             # Update dag_fit to reflect final Delta tweak
-            dag_fit['Delta'] = Delta
-            dag_fit['Shat']  = Sigma_hat
-            dag_fit['Khat']  = np.linalg.inv(Sigma_hat)
-            dag_fit['A']     = A
+            dag_fit["Delta"] = Delta
+            dag_fit["Shat"] = Sigma_hat
+            dag_fit["Khat"] = np.linalg.inv(Sigma_hat)
+            dag_fit["A"] = A
             break
 
     if not converged:

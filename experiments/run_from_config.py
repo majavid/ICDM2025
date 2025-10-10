@@ -1,3 +1,8 @@
+# Copyright (c) 2025 Mohammad Ali Javidian
+# SPDX-License-Identifier: MIT
+#
+# This file is part of the ICDM2025 project.
+# Licensed under the MIT License – see LICENSE in the repo root.
 # src/icdm2025/experiments/run_from_config.py
 from __future__ import annotations
 
@@ -9,6 +14,7 @@ import yaml
 
 
 def run(method: str, data_dir: str, outputs_dir: str, **kwargs):
+    # Dispatch to packaged demos so we share code paths
     if method == "fit_on_source":
         from icdm2025.demos.fit_on_source_demo import main as fn
 
@@ -17,25 +23,19 @@ def run(method: str, data_dir: str, outputs_dir: str, **kwargs):
         from icdm2025.demos.first_order_em_demo import main as fn
 
         return fn(
-            data_dir=data_dir,
-            tol=kwargs.get("tol", 1e-6),
-            max_iter=kwargs.get("max_iter", 50000),
+            data_dir=data_dir, tol=kwargs.get("tol", 1e-6), max_iter=kwargs.get("max_iter", 50000)
         )
     if method == "ecme":
         from icdm2025.demos.ecme_demo import main as fn
 
         return fn(
-            data_dir=data_dir,
-            tol=kwargs.get("tol", 1e-6),
-            max_iter=kwargs.get("max_iter", 3000),
+            data_dir=data_dir, tol=kwargs.get("tol", 1e-6), max_iter=kwargs.get("max_iter", 3000)
         )
     if method == "px_em":
         from icdm2025.demos.px_em_demo import main as fn
 
         return fn(
-            data_dir=data_dir,
-            tol=kwargs.get("tol", 1e-6),
-            max_iter=kwargs.get("max_iter", 9000),
+            data_dir=data_dir, tol=kwargs.get("tol", 1e-6), max_iter=kwargs.get("max_iter", 9000)
         )
     if method == "kiiveri":
         from icdm2025.demos.kiiveri_demo import main as fn

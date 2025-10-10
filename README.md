@@ -23,12 +23,12 @@ Code and experiments for our paper:
 
 ## 📦 Environment
 
-- Python >= 3.10  
-- See [`requirements.txt`](./requirements.txt) for runtime deps  
+- Python >= 3.10
+- See [`requirements.txt`](./requirements.txt) for runtime deps
 - Docs deps in [`docs/requirements.txt`](./docs/requirements.txt)
 
 Docker (optional):
-- We provide a Docker build recipe in `DockerfileDocs` (rename to `Dockerfile` if you prefer).  
+- We provide a Docker build recipe in `DockerfileDocs` (rename to `Dockerfile` if you prefer).
 - Add any system libs your extras need (BLAS, graphviz, etc.).
 
 ---
@@ -113,7 +113,7 @@ If you use this code, please cite:
 
 📄 License
 
-MIT — see the [LICENSE](./LICENSE) file.  
+MIT — see the [LICENSE](./LICENSE) file.
 SPDX-License-Identifier: MIT
 
 🤝 Contributing

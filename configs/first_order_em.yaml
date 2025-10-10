@@ -1,0 +1,5 @@
+data_dir: data
+outputs_dir: outputs
+method: first_order_em
+tol: 1.0e-6
+max_iter: 5000
