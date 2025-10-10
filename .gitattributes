@@ -1,0 +1,14 @@
+* text=auto
+
+# Treat these as text
+*.py   text
+*.md   text
+*.rst  text
+*.yml  text
+*.yaml text
+*.toml text
+
+# Keep binary as-is
+*.png  binary
+*.jpg  binary
+*.pdf  binary
