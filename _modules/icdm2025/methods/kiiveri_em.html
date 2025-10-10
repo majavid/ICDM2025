@@ -1,0 +1,656 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html"><link rel="search" title="Search" href="../../../search.html">
+
+    <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
+        <title>icdm2025.methods.kiiveri_em - ICDM2025</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">ICDM2025</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  <span class="sidebar-brand-text">ICDM2025</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reproduce.html">Reproducing Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for icdm2025.methods.kiiveri_em</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2025 Mohammad Ali Javidian</span>
+<span class="c1"># SPDX-License-Identifier: MIT</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of the ICDM2025 project.</span>
+<span class="c1"># Licensed under the MIT License – see LICENSE in the repo root.</span>
+<span class="c1"># fit_dag_latent.py</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Python port of the R function `fitDagLatent` (Kiiveri-type EM for a recursive</span>
+<span class="sd">SEM with one latent variable). Only the single-latent case is implemented.</span>
+
+<span class="sd">Dependencies</span>
+<span class="sd">------------</span>
+<span class="sd">numpy &gt;= 1.22</span>
+<span class="sd">pandas &gt;= 1.4</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">det</span><span class="p">,</span> <span class="n">inv</span><span class="p">,</span> <span class="n">solve</span>
+
+
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+<span class="c1">#  Numeric hygiene &amp; robust solvers                                           #</span>
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+<div class="viewcode-block" id="symmetrize">
+<a class="viewcode-back" href="../../../api.html#icdm2025.methods.kiiveri_em.symmetrize">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">symmetrize</span><span class="p">(</span><span class="n">M</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="n">M</span><span class="o">.</span><span class="n">T</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="nearest_spd">
+<a class="viewcode-back" href="../../../api.html#icdm2025.methods.kiiveri_em.nearest_spd">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">nearest_spd</span><span class="p">(</span><span class="n">A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Project a symmetric matrix to the nearest SPD by eigenvalue clipping.&quot;&quot;&quot;</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">symmetrize</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+    <span class="n">w</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">V</span> <span class="o">*</span> <span class="n">w</span><span class="p">)</span> <span class="o">@</span> <span class="n">V</span><span class="o">.</span><span class="n">T</span></div>
+
+
+
+<div class="viewcode-block" id="safe_solve_psd">
+<a class="viewcode-back" href="../../../api.html#icdm2025.methods.kiiveri_em.safe_solve_psd">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">safe_solve_psd</span><span class="p">(</span>
+    <span class="n">Sxx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">sxy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">ridge</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-10</span><span class="p">,</span> <span class="n">max_tries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Solve Sxx * beta = sxy robustly. Try direct solve; if singular/ill-conditioned,</span>
+<span class="sd">    add increasing ridge to the diagonal; fall back to pinv at the end.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">Sxx</span> <span class="o">=</span> <span class="n">symmetrize</span><span class="p">(</span><span class="n">Sxx</span><span class="p">)</span>
+    <span class="c1"># try direct</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">solve</span><span class="p">(</span><span class="n">Sxx</span><span class="p">,</span> <span class="n">sxy</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">LinAlgError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="n">lam</span> <span class="o">=</span> <span class="n">ridge</span>
+    <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">Sxx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_tries</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">solve</span><span class="p">(</span><span class="n">Sxx</span> <span class="o">+</span> <span class="n">lam</span> <span class="o">*</span> <span class="n">I</span><span class="p">,</span> <span class="n">sxy</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">LinAlgError</span><span class="p">:</span>
+            <span class="n">lam</span> <span class="o">*=</span> <span class="mf">10.0</span>
+    <span class="c1"># final fallback</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">Sxx</span><span class="p">)</span> <span class="o">@</span> <span class="n">sxy</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+<span class="c1">#  Small helpers                                                              #</span>
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+<div class="viewcode-block" id="random_corr">
+<a class="viewcode-back" href="../../../api.html#icdm2025.methods.kiiveri_em.random_corr">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">random_corr</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a random positive-definite correlation matrix.&quot;&quot;&quot;</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">a</span> <span class="o">@</span> <span class="n">a</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">s</span> <span class="o">/</span> <span class="n">d</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">/</span> <span class="n">d</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span></div>
+
+
+
+<div class="viewcode-block" id="setvar1">
+<a class="viewcode-back" href="../../../api.html#icdm2025.methods.kiiveri_em.setvar1">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">setvar1</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">paz_mask</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">norm</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalise the latent so that either V[z,z] == 1 (norm=1)</span>
+<span class="sd">    or the *residual* variance of z equals 1 (norm=2).&quot;&quot;&quot;</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">norm</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">z</span><span class="p">,</span> <span class="n">z</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># norm == 2</span>
+        <span class="k">if</span> <span class="n">paz_mask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="n">sig</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">z</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">[</span><span class="n">z</span><span class="p">,</span> <span class="n">paz_mask</span><span class="p">]</span> <span class="o">@</span> <span class="n">solve</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">paz_mask</span><span class="p">,</span> <span class="n">paz_mask</span><span class="p">)],</span> <span class="n">v</span><span class="p">[</span><span class="n">paz_mask</span><span class="p">,</span> <span class="n">z</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sig</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">z</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span>
+    <span class="n">v</span><span class="p">[</span><span class="n">z</span><span class="p">,</span> <span class="p">:]</span> <span class="o">*=</span> <span class="n">scale</span>
+    <span class="n">v</span><span class="p">[:,</span> <span class="n">z</span><span class="p">]</span> <span class="o">*=</span> <span class="n">scale</span>
+    <span class="k">return</span> <span class="n">v</span></div>
+
+
+
+<div class="viewcode-block" id="cmqi">
+<a class="viewcode-back" href="../../../api.html#icdm2025.methods.kiiveri_em.cmqi">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cmqi</span><span class="p">(</span><span class="n">syy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Conditional covariance matrix C(M|Q) (Kiiveri, 1987).</span>
+<span class="sd">    `syy`  : observed covariance (p × p)</span>
+<span class="sd">    `sigma`: current full covariance ((p+1) × (p+1))</span>
+<span class="sd">    `z`    : index of the (single) latent variable</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="n">sigma</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">y_idx</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p1</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">z</span><span class="p">]</span>
+
+    <span class="n">q</span> <span class="o">=</span> <span class="n">inv</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+    <span class="n">qzz</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="n">z</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span>
+    <span class="n">qzy</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="n">z</span><span class="p">,</span> <span class="n">y_idx</span><span class="p">]</span>
+
+    <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="n">qzy</span> <span class="o">/</span> <span class="n">qzz</span>  <span class="c1"># shape (p,)</span>
+    <span class="n">bs</span> <span class="o">=</span> <span class="n">b</span> <span class="o">@</span> <span class="n">syy</span>  <span class="c1"># shape (p,)</span>
+
+    <span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+    <span class="n">e</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">y_idx</span><span class="p">,</span> <span class="n">y_idx</span><span class="p">)]</span> <span class="o">=</span> <span class="n">syy</span>  <span class="c1"># S_y|y</span>
+    <span class="n">e</span><span class="p">[</span><span class="n">y_idx</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span> <span class="o">=</span> <span class="n">bs</span>  <span class="c1"># S_y|z</span>
+    <span class="n">e</span><span class="p">[</span><span class="n">z</span><span class="p">,</span> <span class="n">y_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">bs</span>  <span class="c1"># S_z|y (sym.)</span>
+    <span class="n">e</span><span class="p">[</span><span class="n">z</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span> <span class="o">=</span> <span class="n">bs</span> <span class="o">@</span> <span class="n">b</span> <span class="o">+</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">qzz</span>  <span class="c1"># S_z|z</span>
+    <span class="k">return</span> <span class="n">e</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+<span class="c1">#  Parent printing helper (amat[j, i] == 1 means j → i)                       #</span>
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+<div class="viewcode-block" id="print_parent_lists">
+<a class="viewcode-back" href="../../../api.html#icdm2025.methods.kiiveri_em.print_parent_lists">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_parent_lists</span><span class="p">(</span><span class="n">nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">amat_np</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Print parents for each node using convention: amat[j, i] == 1 means j → i.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+    <span class="n">parent_list</span> <span class="o">=</span> <span class="p">[[</span><span class="n">j</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">if</span> <span class="n">amat_np</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">j</span> <span class="o">!=</span> <span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">parents</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parent_list</span><span class="p">):</span>
+        <span class="n">parent_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">parents</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Node </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">): parents idx=</span><span class="si">{</span><span class="n">parents</span><span class="si">}</span><span class="s2">  names=</span><span class="si">{</span><span class="n">parent_names</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+<span class="c1">#  Regression helper with optional fixed coefficients                         #</span>
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+
+
+<div class="viewcode-block" id="lmfit">
+<a class="viewcode-back" href="../../../api.html#icdm2025.methods.kiiveri_em.lmfit">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lmfit</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">z</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ordinary least squares for a DAG node.</span>
+
+<span class="sd">    Fits a regression of node ``y`` on its parent indices ``x`` using the</span>
+<span class="sd">    covariance matrix ``s`` (shape p×p). Optionally accepts a list ``z`` of</span>
+<span class="sd">    fixed/indicator positions to mark (set to 1.0 in the output vector).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s: Covariance matrix (p × p), symmetric.</span>
+<span class="sd">        y: Index of the child node.</span>
+<span class="sd">        x: List of parent indices for node ``y``.</span>
+<span class="sd">        z: Optional list of additional indices to mark as fixed (set to 1.0).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        np.ndarray: Length-``p`` vector ``m`` where:</span>
+<span class="sd">            - ``m[parent] = beta`` for each parent in ``x``</span>
+<span class="sd">            - ``m[y]`` is the residual variance</span>
+<span class="sd">            - ``m[z] = 1.0`` for any provided fixed indices (if any)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">z</span> <span class="ow">or</span> <span class="p">[]</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">x</span><span class="p">:</span>
+        <span class="n">S_xx</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)]</span>
+        <span class="n">S_xy</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">y</span><span class="p">])]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">S_xx</span><span class="p">,</span> <span class="n">S_xy</span><span class="p">)</span>
+        <span class="n">m</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">beta</span>
+        <span class="c1"># residual variance</span>
+        <span class="n">m</span><span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">-</span> <span class="n">S_xy</span> <span class="o">@</span> <span class="n">beta</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># no parents: residual variance equals marginal variance</span>
+        <span class="n">m</span><span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">z</span><span class="p">:</span>
+        <span class="n">m</span><span class="p">[</span><span class="n">z</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="k">return</span> <span class="n">m</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+<span class="c1">#  DAG fitting (GLS) with orientation amat[j,i]==1 (j is parent of i)        #</span>
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+<div class="viewcode-block" id="fitdag">
+<a class="viewcode-back" href="../../../api.html#icdm2025.methods.kiiveri_em.fitdag">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fitdag</span><span class="p">(</span>
+    <span class="n">amat</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">constr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">node_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">verbose_fitdag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fast GLS fitting of a recursive DAG with independent errors.</span>
+<span class="sd">    Returns A, Delta, Shat and Khat = Shat⁻¹.</span>
+<span class="sd">    Convention: amat[j, i] = 1 means edge j → i (j is a parent of i).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">emat</span> <span class="o">=</span> <span class="p">(</span><span class="n">amat</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+    <span class="n">s</span> <span class="o">=</span> <span class="n">symmetrize</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  <span class="c1"># hygiene</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+        <span class="c1"># PARENTS OF i ARE COLUMNS j WHERE emat[j, i] == 1</span>
+        <span class="n">parents</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">if</span> <span class="n">emat</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">j</span> <span class="o">!=</span> <span class="n">i</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">verbose_fitdag</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">node_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[fitdag] node </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> parents idx=</span><span class="si">{</span><span class="n">parents</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;[fitdag] node </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">node_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">) parents idx=</span><span class="si">{</span><span class="n">parents</span><span class="si">}</span><span class="s2"> &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;names=</span><span class="si">{</span><span class="p">[</span><span class="n">node_names</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">parents</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">parents</span><span class="p">:</span>
+            <span class="n">delta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+            <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Only allow constraints on existing parents (prevents singular systems)</span>
+        <span class="k">if</span> <span class="n">constr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">z_fix</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">parents</span> <span class="k">if</span> <span class="n">constr</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">z_fix</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">m</span> <span class="o">=</span> <span class="n">lmfit</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">parents</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">z_fix</span><span class="p">)</span>
+
+        <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">parents</span><span class="p">:</span>
+            <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">parent</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">m</span><span class="p">[</span><span class="n">parent</span><span class="p">]</span>  <span class="c1"># minus sign</span>
+        <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="n">delta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="n">Khat</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">delta</span><span class="p">)</span> <span class="o">@</span> <span class="n">a</span>
+    <span class="n">Khat</span> <span class="o">=</span> <span class="n">symmetrize</span><span class="p">(</span><span class="n">Khat</span><span class="p">)</span>
+    <span class="n">Shat</span> <span class="o">=</span> <span class="n">nearest_spd</span><span class="p">(</span><span class="n">inv</span><span class="p">(</span><span class="n">Khat</span><span class="p">))</span>  <span class="c1"># guard against tiny asymmetries</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">A</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">Delta</span><span class="o">=</span><span class="n">delta</span><span class="p">,</span> <span class="n">Shat</span><span class="o">=</span><span class="n">Shat</span><span class="p">,</span> <span class="n">Khat</span><span class="o">=</span><span class="n">Khat</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="deviance">
+<a class="viewcode-back" href="../../../api.html#icdm2025.methods.kiiveri_em.deviance">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">deviance</span><span class="p">(</span><span class="n">k</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;-2 × log-likelihood (up to a constant).&quot;&quot;&quot;</span>
+    <span class="n">sk</span> <span class="o">=</span> <span class="n">s</span> <span class="o">@</span> <span class="n">k</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">sk</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">det</span><span class="p">(</span><span class="n">sk</span><span class="p">))</span> <span class="o">-</span> <span class="n">sk</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">n</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+<span class="c1">#  EM with one latent                                                         #</span>
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+<div class="viewcode-block" id="fitDagLatent">
+<a class="viewcode-back" href="../../../api.html#icdm2025.methods.kiiveri_em.fitDagLatent">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fitDagLatent</span><span class="p">(</span>
+    <span class="n">amat</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">syy</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">sigma_old</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">latent</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">norm</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">maxit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9000</span><span class="p">,</span>
+    <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">verbose_parents</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">verbose_fitdag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    EM algorithm for a recursive DAG with one latent variable.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    amat   : adjacency matrix (DataFrame) – amat[j,i]==1 means j ⟶ i (parent → child)</span>
+<span class="sd">    syy    : observed covariance matrix (DataFrame) (latent not included)</span>
+<span class="sd">    sigma_old : initial full covariance (numpy array, size (p+1)×(p+1))</span>
+<span class="sd">    n      : sample size</span>
+<span class="sd">    latent : name of the latent variable (must appear in amat)</span>
+<span class="sd">    norm   : 1  ⇒ set Var(z)=1;   2 ⇒ set residual Var(z)=1</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+    <span class="c1"># sanitize labels</span>
+    <span class="n">amat</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">amat</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">amat</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">amat</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">syy</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">syy</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">syy</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">syy</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="n">nam_obs</span> <span class="o">=</span> <span class="n">syy</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">nod_all</span> <span class="o">=</span> <span class="n">amat</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">nod_all</span><span class="p">)</span> <span class="o">-</span> <span class="p">{</span><span class="n">latent</span><span class="p">}</span> <span class="o">&lt;=</span> <span class="nb">set</span><span class="p">(</span><span class="n">nam_obs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Observed nodes in &#39;amat&#39; do not all appear in &#39;syy&#39;.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># reorder so that observed come first, latent last</span>
+    <span class="n">nod</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nod_all</span> <span class="k">if</span> <span class="n">v</span> <span class="o">!=</span> <span class="n">latent</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">latent</span><span class="p">]</span>
+    <span class="n">amat</span> <span class="o">=</span> <span class="n">amat</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">nod</span><span class="p">,</span> <span class="n">nod</span><span class="p">]</span>
+    <span class="n">z_idx</span> <span class="o">=</span> <span class="n">nod</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">latent</span><span class="p">)</span>
+
+    <span class="c1"># print parent lists once, in EM node order</span>
+    <span class="k">if</span> <span class="n">verbose_parents</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Parent lists (amat[j,i]=1 means j→i), in EM node order:&quot;</span><span class="p">)</span>
+        <span class="n">print_parent_lists</span><span class="p">(</span><span class="n">nod</span><span class="p">,</span> <span class="n">amat</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="c1"># mask of parents of z</span>
+    <span class="n">paz_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">amat</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">z_idx</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+
+    <span class="c1"># observed covariance matrix (in the same order as nod, excluding latent)</span>
+    <span class="n">syy_obs</span> <span class="o">=</span> <span class="n">syy</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nod</span> <span class="k">if</span> <span class="n">v</span> <span class="o">!=</span> <span class="n">latent</span><span class="p">],</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">nod</span> <span class="k">if</span> <span class="n">v</span> <span class="o">!=</span> <span class="n">latent</span><span class="p">]]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+
+    <span class="c1"># initial Σ: SPD + scaling</span>
+    <span class="n">sigma_old</span> <span class="o">=</span> <span class="n">nearest_spd</span><span class="p">(</span><span class="n">sigma_old</span><span class="p">)</span>
+    <span class="n">sigma_old</span> <span class="o">=</span> <span class="n">setvar1</span><span class="p">(</span><span class="n">sigma_old</span><span class="p">,</span> <span class="n">z_idx</span><span class="p">,</span> <span class="n">paz_mask</span><span class="p">,</span> <span class="n">norm</span><span class="p">)</span>
+
+    <span class="n">dev</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># --- EM ----------------------------------------------------------------</span>
+    <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">maxit</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="c1"># E-step</span>
+        <span class="n">q_tilde</span> <span class="o">=</span> <span class="n">cmqi</span><span class="p">(</span><span class="n">syy_obs</span><span class="p">,</span> <span class="n">sigma_old</span><span class="p">,</span> <span class="n">z_idx</span><span class="p">)</span>
+        <span class="n">q_tilde</span> <span class="o">=</span> <span class="n">nearest_spd</span><span class="p">(</span><span class="n">q_tilde</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">)</span>
+
+        <span class="c1"># M-step</span>
+        <span class="n">fit</span> <span class="o">=</span> <span class="n">fitdag</span><span class="p">(</span><span class="n">amat</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">q_tilde</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">node_names</span><span class="o">=</span><span class="n">nod</span><span class="p">,</span> <span class="n">verbose_fitdag</span><span class="o">=</span><span class="n">verbose_fitdag</span><span class="p">)</span>
+        <span class="n">sigma_new</span> <span class="o">=</span> <span class="n">fit</span><span class="p">[</span><span class="s2">&quot;Shat&quot;</span><span class="p">]</span>
+        <span class="n">sigma_new</span> <span class="o">=</span> <span class="n">setvar1</span><span class="p">(</span><span class="n">sigma_new</span><span class="p">,</span> <span class="n">z_idx</span><span class="p">,</span> <span class="n">paz_mask</span><span class="p">,</span> <span class="n">norm</span><span class="p">)</span>
+
+        <span class="c1"># deviance</span>
+        <span class="n">dev</span> <span class="o">=</span> <span class="n">deviance</span><span class="p">(</span><span class="n">fit</span><span class="p">[</span><span class="s2">&quot;Khat&quot;</span><span class="p">],</span> <span class="n">q_tilde</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span> <span class="ow">and</span> <span class="p">(</span><span class="n">it</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">it</span> <span class="o">%</span> <span class="mi">50</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">delta_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">sigma_new</span> <span class="o">-</span> <span class="n">sigma_old</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[EM] it=</span><span class="si">{</span><span class="n">it</span><span class="si">:</span><span class="s2">4d</span><span class="si">}</span><span class="s2">  dev=</span><span class="si">{</span><span class="n">dev</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">  ΔΣ₁=</span><span class="si">{</span><span class="n">delta_norm</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">sigma_new</span> <span class="o">-</span> <span class="n">sigma_old</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[EM] converged at it=</span><span class="si">{</span><span class="n">it</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">break</span>
+
+        <span class="n">sigma_old</span> <span class="o">=</span> <span class="n">sigma_new</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Done.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># final normalisation and refit</span>
+    <span class="n">shat</span> <span class="o">=</span> <span class="n">setvar1</span><span class="p">(</span><span class="n">sigma_new</span><span class="p">,</span> <span class="n">z_idx</span><span class="p">,</span> <span class="n">paz_mask</span><span class="p">,</span> <span class="n">norm</span><span class="p">)</span>
+    <span class="n">final</span> <span class="o">=</span> <span class="n">fitdag</span><span class="p">(</span><span class="n">amat</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">shat</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">node_names</span><span class="o">=</span><span class="n">nod</span><span class="p">,</span> <span class="n">verbose_fitdag</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Optional sign normalization for latent (if your convention prefers it)</span>
+    <span class="n">shat</span><span class="p">[</span><span class="n">z_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">shat</span><span class="p">[:,</span> <span class="n">z_idx</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">final</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">][</span><span class="n">z_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">final</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">][:,</span> <span class="n">z_idx</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="c1"># degrees of freedom (use observed p only)</span>
+    <span class="n">p_obs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nod</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># exclude the latent</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">(</span><span class="n">amat</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">p_obs</span> <span class="o">*</span> <span class="p">(</span><span class="n">p_obs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">edges</span> <span class="o">-</span> <span class="n">p_obs</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">Shat</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">shat</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">nod</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">nod</span><span class="p">),</span>
+        <span class="n">Ahat</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">final</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">nod</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">nod</span><span class="p">),</span>
+        <span class="n">Dhat</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">final</span><span class="p">[</span><span class="s2">&quot;Delta&quot;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">nod</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Delta&quot;</span><span class="p">),</span>
+        <span class="n">dev</span><span class="o">=</span><span class="n">dev</span><span class="p">,</span>
+        <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
+        <span class="n">iterations</span><span class="o">=</span><span class="n">it</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../_static/documentation_options.js?v=01f34227"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>
