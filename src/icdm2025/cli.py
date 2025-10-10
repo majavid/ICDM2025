@@ -1,3 +1,8 @@
+# Copyright (c) 2025 Mohammad Ali Javidian
+# SPDX-License-Identifier: MIT
+#
+# This file is part of the ICDM2025 project.
+# Licensed under the MIT License – see LICENSE in the repo root.
 # src/icdm2025/cli.py
 from __future__ import annotations
 import argparse

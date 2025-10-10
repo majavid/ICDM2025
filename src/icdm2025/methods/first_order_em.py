@@ -1,3 +1,8 @@
+# Copyright (c) 2025 Mohammad Ali Javidian
+# SPDX-License-Identifier: MIT
+#
+# This file is part of the ICDM2025 project.
+# Licensed under the MIT License – see LICENSE in the repo root.
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt

@@ -1,3 +1,8 @@
+# Copyright (c) 2025 Mohammad Ali Javidian
+# SPDX-License-Identifier: MIT
+#
+# This file is part of the ICDM2025 project.
+# Licensed under the MIT License – see LICENSE in the repo root.
 # demos/first_order_em_demo.py
 import os, numpy as np, pandas as pd, matplotlib.pyplot as plt
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
