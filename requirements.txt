@@ -1,5 +1,13 @@
-pip==24.2
-setuptools==72.1.0
-loguru==0.7.2
-# TODO: Install any requirements required to run the code in this repository (excluding documentation). Do not remove
-#  the above installations
+# Core numerics
+numpy~=1.26
+scipy~=1.13
+pandas~=2.2
+
+# Modeling/utilities
+networkx~=3.2
+scikit-learn~=1.4
+pyyaml~=6.0
+tqdm~=4.66
+
+# Plots (for quick visualizations)
+matplotlib~=3.8
