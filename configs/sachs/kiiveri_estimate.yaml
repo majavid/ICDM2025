@@ -1,0 +1,17 @@
+dataset:
+  data_dir: data/sachs
+  source_file: sachs_all_continuous.csv
+  adjacency_file: sachs_adjacency.csv
+  target_var: ERK     # ← set to the Sachs variable you want as T
+
+method: kiiveri
+params:
+  tol: 1.0e-6
+  max_iter: 3000
+  norm: 2
+  seed: 145
+
+output:
+  out_dir: outputs
+  save_plots: true
+  save_metrics_csv: false

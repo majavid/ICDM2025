@@ -1,0 +1,18 @@
+dataset:
+  data_dir: data/magic_irri
+  source_file: sourceHT.csv
+  target_missing_file: targetHT7missing.csv
+  target_true_file: targetHT7.csv
+  adjacency_file: adjacency_matrix_magic_irri.csv
+  target_var: HT
+
+method: ecme
+params:
+  tol: 1.0e-6
+  max_iter: 5000
+  seed: 145
+
+output:
+  out_dir: outputs
+  save_plots: true
+  save_metrics_csv: true
