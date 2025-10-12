@@ -21,6 +21,10 @@ Code and experiments for the paper:
   - 64-node MAGIC-IRRI network
   - Sachs single-cell signaling dataset
 - **Utilities** for DAG-constrained Gaussian SEM fitting
+- **Supplementary Materials (PDF):**
+[In repo](SupplementaryMaterials.pdf) ·
+[Hosted](https://majavid.github.io/ICDM2025/_static/SupplementaryMaterials.pdf)
+
 
 If you’re here to **impute a fully missing target `T`** under domain shift with a known DAG, jump to **Quickstart**.
 
