@@ -22,8 +22,7 @@ Code and experiments for the paper:
   - Sachs single-cell signaling dataset
 - **Utilities** for DAG-constrained Gaussian SEM fitting
 - **Supplementary Materials (PDF):**
-[In repo](docs/source/_static/SupplementaryMaterials.pdf) ·
-[Hosted](https://majavid.github.io/ICDM2025/_static/SupplementaryMaterials.pdf)
+(https://arxiv.org/pdf/2601.03459)·
 
 
 If you’re here to **impute a fully missing target `T`** under domain shift with a known DAG, jump to **Quickstart**.
